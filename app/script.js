@@ -1,5 +1,16 @@
+const div = document.createElement('div'),
+
+    messages = document.querySelector('.chat-widget__messages'),
+
+    innerDivMessage = document.createElement('div'),
+    innerDivTime = document.createElement('div'),
+
+    botDiv = document.createElement('div'),
+    botDivMessage = document.createElement('div'),
+    botDivTime = document.createElement('div');
+
 document.addEventListener('click', e => {
-    if(!e.target.closest('.chat-widget')) {
+    if (!e.target.closest('.chat-widget')) {
         return;
     }
 
@@ -7,30 +18,19 @@ document.addEventListener('click', e => {
 
     chatWidget.classList.add('chat-widget_active');
 
-    //закрытие окна чата
+      //закрытие окна чата
     const close = e.target.closest('.task__remove');
 
-    if(close) {
+    if (close) {
         chatWidget.classList.remove('chat-widget_active');
     }
 
-})
+});
 
 document.addEventListener('keypress', e => {
-    if(e.keyCode !== 13) {
+    if (e.keyCode !== 13) {
         return;
     }
-
-    const div = document.createElement('div'),
-
-        messages = document.querySelector('.chat-widget__messages'),
-
-        innerDivMessage = document.createElement('div'),
-        innerDivTime = document.createElement('div'),
-
-        botDiv = document.createElement('div'),
-        botDivMessage = document.createElement('div'),
-        botDivTime = document.createElement('div');
 
     div.classList.add('message', 'message_client');
     innerDivMessage.classList.add('message__text');
@@ -43,7 +43,7 @@ document.addEventListener('keypress', e => {
     innerDivMessage.innerText = e.target.value;
 
     // проверка пустого сообщения
-    if(innerDivMessage.innerText === '') {
+    if (innerDivMessage.innerText === '') {
         return;
     }
 
@@ -52,10 +52,10 @@ document.addEventListener('keypress', e => {
     div.appendChild(innerDivMessage);
 
     e.target.value = '';
-
+    messages.scrollIntoView(false);
     const userTime = new Date();
 
-    innerDivTime.innerText = userTime.toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'});
+    innerDivTime.innerText = userTime.toLocaleTimeString(navigator.language, {hour: '2-digit', minute: '2-digit'});
 
     const arrAnswers = ['Hello', 'How are you', 'London'];
 
@@ -63,10 +63,10 @@ document.addEventListener('keypress', e => {
 
     botDivMessage.innerText = arrAnswers[i];
 
-    const botAnswer = setTimeout(function() {
+    const botAnswer = setTimeout(function () {
         const botTime = new Date();
 
-        botDivTime.innerText = botTime.toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'});
+        botDivTime.innerText = botTime.toLocaleTimeString(navigator.language, {hour: '2-digit', minute: '2-digit'});
 
         messages.appendChild(botDiv);
         botDiv.appendChild(botDivMessage);
@@ -76,8 +76,39 @@ document.addEventListener('keypress', e => {
     }, 1000);
 
 
+        // AUTO ANSWER
+        function autoAnswer() {
+            const botDiv = document.createElement('div'),
+                botDivMessage = document.createElement('div'),
+                botDivTime = document.createElement('div');
 
-})
+            botDiv.classList.add("message");
+            botDivMessage.classList.add('message__text');
+            botDivTime.classList.add('message__time');
+
+            const arrAutoAnswers = ['Where are you?', 'Answer me!!!', 'Tell me something'];
+
+            let i = Math.floor(Math.random() * arrAutoAnswers.length);
+
+            botDivMessage.innerText = arrAutoAnswers[i];
+
+            const botTime = new Date();
+
+            botDivTime.innerText = botTime.toLocaleTimeString(navigator.language, {hour: '2-digit', minute: '2-digit'});
+
+            messages.appendChild(botDiv);
+            botDiv.appendChild(botDivMessage);
+            botDiv.appendChild(botDivTime);
+            //прижать скролл к низу
+            messages.scrollIntoView(false);
+        }
+
+        setInterval(function () {
+            autoAnswer();
+
+        }, 10000);
+
+});
 
 
 
